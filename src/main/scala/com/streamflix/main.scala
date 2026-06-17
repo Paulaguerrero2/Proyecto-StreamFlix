@@ -1,51 +1,30 @@
-// 1: Filtrar solo las líneas que empiezan con [ERROR] o [INFO]
 
 package com.streamflix
-
+import org.apache.spark.SparkContext
+import processor.Modulo1
+import processor.Modulo2
 import org.apache.spark.sql.SparkSession
+import processor.Modulo3
 
 object Main {
   def main(args: Array[String]): Unit = {
 
-    val spark = SparkSession.builder()
+    implicit val spark: SparkSession = SparkSession.builder()
       .appName("StreamFlix Analytics")
       .master("local[*]")
       .getOrCreate()
 
-    val sc = spark.sparkContext
+    implicit val sc: SparkContext = spark.sparkContext
 
-    val rawLogsRDD = sc.textFile("src/main/resources/data/server_logs.txt")
 
-    val filteredLogs = rawLogsRDD.filter(line =>
-      line.startsWith("[ERROR]") || line.startsWith("[INFO]")
-    )
+    val filteredLogs = Modulo1.iniciarModulo1()
+    val moviesDF = Modulo2.iniciarModulo2()
+    val genreMetricsDF = Modulo3.iniciarModulo3()
 
-    filteredLogs.collect().foreach(println)
+    genreMetricsDF.show()
+
 
     spark.stop()
 
-
-
-// 2: Mapear para extraer (Nivel, Mensaje)
-
-val mappedLogs = filteredLogs.map(line => {
-  val nivel = line.split(" ")(0)
-  val mensaje = line
-
-  (nivel, mensaje)
-})
-
-mappedLogs.collect().foreach(println)
-
-
-// Tarea 3: Contar cuántos errores de tipo 503 ocurrieron usando RDD actions (count, filter)
-
-val errores503 = filteredLogs.filter(line =>
-  line.contains("Code:503")
-)
-
-val totalErrores503 = errores503.count()
-
-println("Errores 503: " + totalErrores503)
   }
 }
