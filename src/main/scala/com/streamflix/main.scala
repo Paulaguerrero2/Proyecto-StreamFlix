@@ -5,6 +5,8 @@ import processor.Modulo1
 import processor.Modulo2
 import org.apache.spark.sql.SparkSession
 import processor.Modulo3
+import processor.Modulo4
+import processor.Modulo5
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -23,6 +25,11 @@ object Main {
 
     genreMetricsDF.show()
 
+    val modulo4DF = Modulo4.iniciarModulo4()
+
+    modulo4DF.show()
+
+    Modulo5.iniciarModulo5(modulo4DF, moviesDF)
 
     spark.stop()
 

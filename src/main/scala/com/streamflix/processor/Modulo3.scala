@@ -10,13 +10,13 @@ object Modulo3 {
 
     println("=== MODULO 3: CARGAR DATOS ===")
 
-    // ✅ Leer películas
+    // Leer películas
     val moviesDF = spark.read
       .option("header", "true")
       .csv("src/main/resources/data/movies_metadata.csv")
 
 
-    // ✅ Leer logs (texto)
+    // Leer logs
     val logsDF_raw = spark.read
       .text("src/main/resources/data/server_logs.txt")
 
@@ -24,7 +24,7 @@ object Modulo3 {
 
     println("=== MODULO 3: CREAR LOGS ===")
 
-    // ✅ Crear logsDF
+    // Crear logsDF
 
     val logsDF = logsDF_raw
       .withColumn("user_id",
