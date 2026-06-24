@@ -1,4 +1,3 @@
-
 package com.streamflix.processor
 
 import org.apache.spark.sql.{DataFrame, SparkSession}

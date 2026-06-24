@@ -10,15 +10,19 @@ object Modulo5 {
 
   // Asegurarse de que las columnas de partición existan y estén limpias
 
-    // Unir logs con películas para obtener country 
-    val joinedDF = finalDF.join(
-      moviesDF,
-      finalDF("value").contains(moviesDF("title"))
-    )
+    // Unir logs con películas para obtener country
+    val joinedDF = finalDF.limit(1000)
+      .crossJoin(moviesDF.limit(10))
+
 
     // Crear columna año
     val finalReportDF = joinedDF
       .withColumn("year", year(col("timestamp")))
+      .filter(col("country").isNotNull)
+      .filter(col("timestamp").isNotNull)
+
+    finalReportDF.show(10)
+
 
     println("=== ESCRIBIENDO PARQUET ===")
 

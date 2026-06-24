@@ -1,4 +1,3 @@
-
 package com.streamflix
 import org.apache.spark.SparkContext
 import processor.Modulo1
@@ -16,22 +15,18 @@ object Main {
       .master("local[*]")
       .getOrCreate()
 
-    implicit val sc: SparkContext = spark.sparkContext
+
+    val logsPath = args(0)
+    val moviesPath = args(1)
+    val outputPath = args(2)
 
 
-    val filteredLogs = Modulo1.iniciarModulo1()
-    val moviesDF = Modulo2.iniciarModulo2()
-    val genreMetricsDF = Modulo3.iniciarModulo3()
-
-    genreMetricsDF.show()
-
-    val modulo4DF = Modulo4.iniciarModulo4()
-
-    modulo4DF.show()
-
-    Modulo5.iniciarModulo5(modulo4DF, moviesDF)
+    ETLProcessor.run(
+      Config.logsPath,
+      Config.moviesPath,
+      Config.outputPath
+    )
 
     spark.stop()
-
   }
 }
